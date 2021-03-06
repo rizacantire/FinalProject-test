@@ -1,5 +1,6 @@
 ﻿using System;
 using Business.Concrete;
+using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -10,12 +11,38 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            ProductTest();
+            //CategoryTest();
 
-            
+        }
 
+        private static void CategoryTest()
+        {
+            CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
+            var result = categoryManager.GetAll();
+            foreach (var item in result)
+            {
+                Console.WriteLine(item.CategoryName);
+            }
+        }
+
+
+        private static void ProductTest()
+        {
             ProductManager productManager = new ProductManager(new EfProductDal());
-            productManager.Add(new Product { CategoryID = 1,ProductId=1,ProductName="ürün",UnitInStock=23,UnitPrice=1566 });
+            var result = productManager.GetProductDetails();
+            if(result.Success==true)
+            {
+                foreach (var item in result.Data)
+                {
+                    Console.WriteLine(item.ProductName);
+                }
+            }
 
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
         }
     }
 }
